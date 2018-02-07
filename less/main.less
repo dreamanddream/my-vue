@@ -1,0 +1,151 @@
+@charset "utf-8";
+// body{
+//     background: red;
+// }
+// 我是双斜杠编译的
+/*我是用星号注释的*/
+// 变量,先声明变量再使用变量
+@tab_width:300px;
+div{
+    width:@tab_width;
+    .border;
+}
+// 混合
+.border{
+    border:1px solid red;
+}
+// 带参数的混合
+// 声明
+.border_02(@border_width){
+    width:@tab_width;
+    height:@tab_width; 
+    border:solid yellow @border_width;
+}
+.test_hunhe{
+    .border_02(30px);
+}
+// 混合--带默认值
+.border_03(@border_width:10px){
+    border:@border_width solid red;
+}
+.test_hunhe_03{
+    .border_03();
+}
+// 声明：混合--结合css3
+.border-radius(@radius:5px){
+    -webkit-border-radius: @radius;
+    -moz-border-radius: @radius;
+    border-radius: @radius;
+}
+// 使用 
+.radius_test{
+    width:100px;
+    height: 100px;
+    background: green;
+    .border-radius();
+}
+// 匹配模式:简单理解就是写好各种类型，然后根据传值执行不同的匹配
+// .sanjiao{
+//     width: 0;
+//     height: 0;
+//     overflow: hidden;
+//     border-width:10px;
+//     border-color:transparent transparent transparent red;
+//     border-style:solid;
+// }
+.triangle(top,@w:5px,@c:rgb(196, 33, 147)){
+    border-width:@w;
+    border-color:transparent transparent @c transparent;
+    border-style:solid;
+}
+.triangle(bottom,@w:5px,@c:#666){
+    border-width:@w;
+    border-color:@c transparent transparent transparent;
+    border-style:solid;
+}
+// 使用匹配方式
+// 匹配模式:简单理解就是写好各种类型，然后根据传值执行不同的匹配
+// .sanjiao{
+//     width:0;
+//     height:0;
+//     overflow: hidden;
+//     .triangle(top);
+// }
+// 将宽和高这些公共部分必须要带的再单独抽离出来
+.triangle(@_,@w:5px,@c:#666){
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+.sanjiao{
+    .triangle(bottom)
+}
+// 匹配模式的定位
+.pos(r){
+    position: relative;
+}
+.pos(a){
+    position: absolute;
+}
+.pos(f){
+    position: fixed;
+}
+.dingwei{
+    width:200px;
+    height:200px;
+    background: rgb(98, 0, 255);
+    .pos(f);
+    top:500px;
+}
+// 运算
+@test_yun:300px;
+.yunsuan{
+    width:(@test_yun*2-20)*2;
+    // color:#ccc - 10; 颜色可以用减法，但是一般都不会使用
+}
+// 嵌套
+.list{
+    width: 600px;
+    height: 30px;
+    margin:0;
+    padding:0;
+    list-style:none;
+    li{
+        height:30px;
+        line-height: 30px;
+        color:#666;
+    }
+    // 在这里&代表list
+    &:hover{
+        color:red;
+    }
+    a{
+        float:left;
+        // &代表上一层选择器，在这里&代表的是a
+        &:hover{
+            color:red;
+        }
+    }
+    span{
+       float: right;
+    }
+}
+// @arguments
+.border_arg(@w:30px,@c:red,@xx:solid){
+    border:@arguments;
+}
+.test_arguments{
+    .border_arg(40px);
+}
+// 避免编译,简单理解就是使用波浪号，还要有单引号，将在这里写的样式不做任何处理，原封不动的进行输出。
+.test_03{
+    width:~'calc(300px - 30px)';
+}
+// 如果不带波浪号
+.test_03{
+    width:calc(300px - 30px);
+}
+// important,一般调试程序的时候使用
+.test_important{
+   .border-radius() !important;
+}
