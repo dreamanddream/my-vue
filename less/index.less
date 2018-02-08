@@ -1,1 +1,51 @@
 @charset "utf-8";
+*{
+    margin:0;
+    padding:0;
+}
+.clearfix{
+    height:0;
+    overflow: hidden;
+}
+
+@app_width:800px;
+#app{
+    margin:0 auto;
+    width: @app_width;
+}
+// 头部
+@border-bottom:1px solid #ddd;
+.head{
+    list-style: none;
+    border-bottom:@border-bottom;
+    li{
+        float: left;
+        width:12%;
+        margin-bottom: 10px;
+        text-align: left;
+    }
+    .shangpin{
+        width:40%;
+    }
+}
+// 数量加减
+.num-wrap .num{
+    width:30%;
+    text-align: center;
+}
+.table{
+    td{
+        width:12%;
+    }
+    tr{
+        margin-bottom: 15px;
+    }
+    .font-description{
+        width: 40%;
+        img{
+            width: 80px;
+            height: 100px;
+            float:left;
+        }
+    }
+}
