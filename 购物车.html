@@ -5,13 +5,15 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>vue-购物车</title>
         <link rel="stylesheet" href="less/index.css">
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     </head>
     <body>
         <div id="app">
             <h3>购物车</h3>
             <ul class="head">
-                <li class="check-box">
-                        <input type="checkbox">全选
+                <li class="check-box td-check">
+                    <!-- 是否出现红色对勾取决于isSlelectAll的真假性true或false -->
+                    <span class="check-span check-all" :class="{'check-true':isSelectAll}"></span>
                 </li>
                 <li class="shangpin">商品</li>
                 <li>数量</li>
@@ -21,54 +23,36 @@
             </ul>
             <table class="table">
                 <tbody>
-                    <tr>
-                        <td><input type="checkbox"></td>
+                    <tr v-for="item in productList">
+                        <!-- <td><input type="checkbox"></td> -->
+                        <!-- 在mounted中设置select初始值为true，一旦点击复制为false，从而通过true或者false来改变是否添加check-true类，以及在mounted中的设置-->
+                        <td class="td-check"><span class="check-span" @click="item.select=!item.select" :class="{'check-true':item.select}"></span></td>
                         <td class="font-description">
-                            <img src="images/wei2.jpg" alt="">
+                            <img :src="item.pro_img" alt="">
                             <div class="wenzi">
-                                    <h6>【斯文】甘油&nbsp;|&nbsp;丙三醇</h6>
-                                    <p>品牌：韩国skc&nbsp;&nbsp;产地：韩国</p>
-                                    <p>规格/纯度:99.7%&nbsp;&nbsp;起定量：215千克</p>
-                                    <p>配送仓储：上海仓海仓储</p>
+                                <h6>{{ item.pro_name }}</h6>
+                                <p>品牌：{{ item.pro_brand }}&nbsp;&nbsp;产地：{{ item.pro_place }}</p>
+                                <p>规格/纯度:{{ item.pro_purity }}&nbsp;&nbsp;起定量：{{ item.pro_min }}</p>
+                                <p>配送仓储：{{ item.pro_depot }}</p>
                             </div>
                         </td>
                         <td>
                             <div class="num-wrap">
-                                <span>-</span>
-                                <input type="text" value="666" class="num">
-                                <span>+</span>
+                                <span @click="item.pro_num--">-</span>
+                                <!-- 这里要注意，v-model要使用，第一次竟然写成了valiue={{ item.pro_num }} -->
+                                <input type="text" v-model="item.pro_num" class="num">
+                                <span @click="item.pro_num++">+</span>
                             </div>
                         </td>
-                        <td class="money">￥400</td>
-                        <td class="jine">￥700</td>
+                        <td class="money">￥{{ item.pro_money }}</td>
+                        <td class="jine">￥{{ item.pro_num*item.pro_money}}</td>
                         <td class="dele">删除</td>
                     </tr>
-                    <tr>
-                            <td><input type="checkbox"></td>
-                            <td class="font-description">
-                                    <img src="images/wei2.jpg" alt="">
-                                    <div class="wenzi">
-                                            <h6>【斯文】甘油&nbsp;|&nbsp;丙三醇</h6>
-                                            <p>品牌：韩国skc&nbsp;&nbsp;产地：韩国</p>
-                                            <p>规格/纯度:99.7%&nbsp;&nbsp;起定量：215千克</p>
-                                            <p>配送仓储：上海仓海仓储</p>
-                                    </div>
-                            <td>
-                                <div class="num-wrap">
-                                    <span>-</span>
-                                    <input type="text" value="666" class="num">
-                                    <span>+</span>
-                                </div>
-                            </td>
-                            <td class="money">￥400</td>
-                            <td class="jine">￥700</td>
-                            <td class="dele">删除</td>
-                        </tr>
             </tbody>
         </table>
         <div class="footer">
             <div class="footer-wrap">
-                <span class="getNum">2</span><span>件商品总计(不含运费)</span><span class="total-price"></span>
+                <span class="getNum">{{getTotal.totalNum}}</span><span>件商品总计(不含运费)</span><span class="total-price">{{ getTotal.totalPrice }}</span>
             </div>
             
         </div>
@@ -77,10 +61,86 @@
             new Vue({
                 el:"#app",
                 data:{
-                    
+                    productList:[
+                        {
+                            'pro_name': '【斯文】甘油 | 丙三醇',//产品名称
+                            'pro_brand': 'skc',//品牌名称
+                            'pro_place': '韩国',//产地
+                            'pro_purity': '99.7%',//规格
+                            'pro_min': "215千克",//最小起订量
+                            'pro_depot': '上海仓海仓储',//所在仓库
+                            'pro_num': 3,//数量
+                            'pro_img': 'images/wei2.jpg',//图片链接，
+                            'pro_money':500// 单价
+                        },
+                        {
+                            'pro_name': '11111',//产品名称
+                            'pro_brand': 'skc',//品牌名称
+                            'pro_place': '韩国',//产地
+                            'pro_purity': '99.7%',//规格
+                            'pro_min': "215千克",//最小起订量
+                            'pro_depot': '上海仓海仓储',//所在仓库
+                            'pro_num': 3,//数量
+                            'pro_img': 'images/wei2.jpg',//图片链接
+                            'pro_money':200 // 单价
+                        },
+                        {
+                            'pro_name': '222',//产品名称
+                            'pro_brand': 'skc',//品牌名称
+                            'pro_place': '韩国',//产地
+                            'pro_purity': '99.7%',//规格
+                            'pro_min': "215千克",//最小起订量
+                            'pro_depot': '上海仓海仓储',//所在仓库
+                            'pro_num': 3,//数量
+                            'pro_img': 'images/wei2.jpg',//图片链接
+                            'pro_money':300 //单价
+                        }
+                    ]
+                },
+                mounted:function () {
+                    //为productList添加select（是否选中）字段，初始值为true
+                    var _this=this;
+                    //为productList添加select（是否选中）字段，初始值为true
+                    this.productList.map(function (item) {
+                    _this.$set(item, 'select', true);
+                })
+                //要像上面这样写双向绑定才能起效，下面的写法是有问题的，双向绑定不起效的！
+                //this.productList.map(function (item) {item.select=true})
+                },
+                // 加减功能
+                methods: {
+                    // sub () {
+                    //     if(this.pro_num <= 0){
+                    //         this.pro_num=0;
+                    //     }
+                    //     this.pro_num--;
+                    // },
+                    // add () {
+                    //     if( this.pro_num >= 5){
+                    //         this.pro_num=5;
+                    //     }
+                    //     this.pro_num++;
+                    // }
+                },
+                // 通过计算属性判断全选的状态
+                computed: {
+                    isSelectAll:function(){
+                        //如果productList中每一条数据的select都为true，返回true，否则返回false;
+                        return this.productList.every(function (val) { return val.select});
+                    },
+                    getTotal:function(){
+                        //获取productList中select为true的数据。
+                        var _proList=this.productList.filter(function (val) { return val.select}),totalPrice=0;
+                        for(var i=0,len=_proList.length;i<len;i++){
+                            //总价累加
+                            totalPrice+=_proList[i].pro_num*_proList[i].pro_price;
+                        }
+                        //选择产品的件数就是_proList.length，总价就是totalPrice
+                        return {totalNum:_proList.length,totalPrice:totalPrice}
+                    },
+
                 }
             })
         </script>
-    
     </body>
     </html>
